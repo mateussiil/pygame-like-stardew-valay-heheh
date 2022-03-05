@@ -1,5 +1,6 @@
 import pygame
 from settings import *
+from support import *
 from debug import debug
 
 
@@ -10,13 +11,14 @@ class Player(pygame.sprite.Sprite):
         self.animation_speed = 0.15
         self.direction = pygame.math.Vector2()
 
-        self.image = pygame.Surface((16, 16))
+        self.animations = load_tile_table('../graphics/player/idle/idle.png')
+        self.status = 'idle'
+        self.image = self.animations[0][0]
         self.rect: pygame.rect.Rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(0, -5)
         self.speed = 5
 
         self.obstacle_sprites = obstacle_sprites
-
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -65,8 +67,17 @@ class Player(pygame.sprite.Sprite):
                         self.hitbox.bottom = sprite.hitbox.top
                     if self.direction.y < 0: # Moving top  
                         self.hitbox.top = sprite.hitbox.bottom
-    
+
+    def animate(self):
+        animation = self.animations
+        self.frame_index += self.animation_speed
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+
+        self.image = animation[int(self.frame_index)][0]
+        self.rect = self.image.get_rect(center = self.hitbox.center)
 
     def update(self):
         self.input()
+        # self.animate()
         self.move(self.speed)

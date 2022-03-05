@@ -4,7 +4,6 @@ from settings import *
 from support import import_csv_layout, import_folder 
 from tile import Tile
 from debug import debug
-
 from player import Player
 
 class Level:
@@ -31,7 +30,6 @@ class Level:
                             Tile((x,y), [self.obstacle_sprites], 'invisible')
                         if style == 'entities':
                             if col == '0':
-                                print(x, y)
                                 self.player = Player((x, y), [self.visible_sprites], self.obstacle_sprites)
         
 
