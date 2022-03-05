@@ -1,5 +1,7 @@
 import pygame
 import pygame.freetype
+from components import Card
+from ui import UI
 from settings import *
 from support import import_csv_layout, import_folder 
 from tile import Tile
@@ -11,8 +13,12 @@ class Level:
         self.display_surface = pygame.display.get_surface()
         self.visible_sprites = YSortCamerGroup()
         self.obstacle_sprites = pygame.sprite.Group()
+        self.mouseable_sprites = pygame.sprite.Group()
 
         self.create_map()
+
+        self.ui = UI(self.mouseable_sprites)
+        self.card = Card(self.mouseable_sprites)
 
     def create_map(self):
         layouts = {
@@ -32,11 +38,21 @@ class Level:
                             if col == '0':
                                 self.player = Player((x, y), [self.visible_sprites], self.obstacle_sprites)
         
-
+    def mouse_logic(self):
+        if self.mouseable_sprites:
+            for mouse_sprite in self.mouseable_sprites:
+                click = pygame.mouse.get_pressed()
+                collision_sprites = mouse_sprite.rect.collidepoint(pygame.mouse.get_pos()) 
+                if collision_sprites and mouse_sprite.sprint_type == 'card' and click[0]:
+                    mouse_sprite.onClick(click[0], click[1], click[2])
+        
     def run(self):
         #update and draw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
+        self.mouse_logic()
+        self.ui.display(self.player)
+        self.card.display()
 
 class YSortCamerGroup(pygame.sprite.Group):
     def __init__(self):

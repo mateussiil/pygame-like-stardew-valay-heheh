@@ -10,7 +10,7 @@ class Game:
         self.screen = pygame.display.set_mode((WIDTH, HEIGTH))
         pygame.display.set_caption('Fazendinha')
         self.clock = pygame.time.Clock()
-
+        pygame.mouse.set_visible(True)
         self.level = Level()
 
     def run(self):
@@ -25,7 +25,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
             
-            self.screen.fill('black')
+            self.screen.fill('#001010')
             self.level.run()
             pygame.display.update()
             self.clock.tick(FPS)
