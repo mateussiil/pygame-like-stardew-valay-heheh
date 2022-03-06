@@ -1,4 +1,5 @@
 import pygame
+from support import read_save
 from components import Card
 from player import Player
 from settings import *
@@ -43,13 +44,14 @@ class MenuDown(pygame.sprite.Sprite):
         self.rect.center = (WIDTH // 2, HEIGTH - 30)
         self.items = [x for x in range(self.storage_limit)]
 
-        self.draw()
+        self.draw_items()
 
-    def draw(self):
+    def draw_items(self):
+        data = read_save('../saves/menu.txt')
         for i in range(self.storage_limit):
             x = self.rect.left + i*TILESIZE + 1
             y = self.rect.top
-            self.items[i] = Card((x,y), self.group_clickable)
+            self.items[i] = Card((x,y), i, data[i], self.group_clickable)
 
     def display(self):
         pygame.draw.rect(self.display_surface, HEALTH_COLOR, self.rect)

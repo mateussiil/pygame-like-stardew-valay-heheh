@@ -1,3 +1,4 @@
+import json
 from os import walk
 from csv import reader
 from typing import List
@@ -35,3 +36,12 @@ def load_tile_table(filename):
             rect = (tile_x*TILESIZE, tile_y*TILESIZE, TILESIZE, TILESIZE)
             line.append(image.subsurface(rect))
     return tile_table
+
+def read_save(path):
+    with open(path, 'r') as file:
+        data = json.load(file)
+    return data
+
+def save(path, data):
+    with open(path, 'w') as file:
+        data = json.load(file)
