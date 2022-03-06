@@ -1,4 +1,5 @@
 import pygame
+from components import Card
 from player import Player
 from settings import *
 
@@ -29,3 +30,30 @@ class UI(pygame.sprite.Sprite):
     def display(self, player: Player):
         self.show_bar(300, 300, self.health_bar_rect, HEALTH_COLOR)
         self.show_bar(300, 300, self.stamina_bar_rect, 'green')
+
+class MenuDown(pygame.sprite.Sprite):
+    def __init__(self, groups, group_clickable):
+        self.groups = groups
+       
+        self.group_clickable = group_clickable
+        
+        self.storage_limit = 10
+        self.display_surface = pygame.display.get_surface()
+        self.rect = pygame.Rect(WIDTH // 2, HEIGTH - 30, self.storage_limit*TILESIZE + 2, TILESIZE + 4)
+        self.rect.center = (WIDTH // 2, HEIGTH - 30)
+        self.items = [x for x in range(self.storage_limit)]
+
+        self.draw()
+
+    def draw(self):
+        for i in range(self.storage_limit):
+            x = self.rect.left + i*TILESIZE + 1
+            y = self.rect.top
+            self.items[i] = Card((x,y), self.group_clickable)
+
+    def display(self):
+        pygame.draw.rect(self.display_surface, HEALTH_COLOR, self.rect)
+        for sprites in self.items:
+            sprites.rect.center =  (sprites.rect.center[0], self.rect.center[1])
+            sprites.display()
+        

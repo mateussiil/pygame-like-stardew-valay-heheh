@@ -1,7 +1,7 @@
 import pygame
 import pygame.freetype
 from components import Card
-from ui import UI
+from ui import UI, MenuDown
 from settings import *
 from support import import_csv_layout, import_folder 
 from tile import Tile
@@ -18,7 +18,7 @@ class Level:
         self.create_map()
 
         self.ui = UI(self.mouseable_sprites)
-        self.card = Card(self.mouseable_sprites)
+        self.menu_bottom = MenuDown([], self.mouseable_sprites)
 
     def create_map(self):
         layouts = {
@@ -45,14 +45,14 @@ class Level:
                 collision_sprites = mouse_sprite.rect.collidepoint(pygame.mouse.get_pos()) 
                 if collision_sprites and mouse_sprite.sprint_type == 'card' and click[0]:
                     mouse_sprite.onClick(click[0], click[1], click[2])
-        
+
     def run(self):
         #update and draw the game
         self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         self.mouse_logic()
         self.ui.display(self.player)
-        self.card.display()
+        self.menu_bottom.display()
 
 class YSortCamerGroup(pygame.sprite.Group):
     def __init__(self):
@@ -60,7 +60,6 @@ class YSortCamerGroup(pygame.sprite.Group):
         self.display_surface = pygame.display.get_surface()
         self.half_width = self.display_surface.get_size()[0] // 2
         self.half_height = self.display_surface.get_size()[1] // 2
-        # self.offset = pygame.math.Vector2(self.half_width, self.half_height) Camera in half screen
         self.offset = pygame.math.Vector2()
         
         #creating the floor
